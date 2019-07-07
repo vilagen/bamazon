@@ -20,4 +20,6 @@ VALUES ("Nintendo Switch", "Gaming", 298.99, 25), ("AMD Processor", "Computer", 
 ("Super Jump 2", "Video Games", 59.99, 45), ("Headphones", "Electronics", 24.99, 12),
 ("HD TV", "Televisions", 359.98, 7), ("Guitar", "Musical Instruments",  149.99, 9);
 
-SELECT * FROM bamazon_db
+SELECT * FROM products;
+
+ALTER USER 'root'@'localhost' IDENTIFIED WITH mysql_native_password BY 'root'
