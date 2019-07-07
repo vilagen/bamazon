@@ -23,6 +23,7 @@ close the node program.
 
 
 **Start of the program**
+
 ![Start](https://github.com/vilagen/bamazon/blob/master/pictures/startbam.PNG?raw=true)
 
 If the user decides to continue to purchase a product, it will start connection to the SQL
@@ -30,6 +31,7 @@ database. There is a function set to show the list of items in a way that is rea
 shows the item id, item name, departmnet, quantity, and price. 
 
 **Products listed from the SQL table**
+
 ![ProductList](https://github.com/vilagen/bamazon/blob/master/pictures/showProducts.PNG?raw=true)
 
 The user is prompted to choose an item based on it's id. At this time, there are only 11
@@ -38,6 +40,7 @@ in a choice that isn't an id, like 32, or even other characters such as 'ief', e
 prompt if the person would like to continue shopping or exit the program.
 
 **Checking if item_id chosen is a product in SQL table**
+
 ![itemIDCheck](https://github.com/vilagen/bamazon/blob/master/pictures/itemidcheck.PNG?raw=true)
 
 Notice in the picture that item ID 10, "HD TV" has 0 items left? There is a statement in
@@ -46,6 +49,7 @@ a message that there isn't any in stock, and will go back asking if they would l
 purchase an item or not.
 
 **Result if item is out of stock**
+
 ![itemOutofStock](https://github.com/vilagen/bamazon/blob/master/pictures/outOfStock.PNG?raw=true)
 
 If a user does choose an item they will to buy they will be asked how many of that item. 
@@ -54,6 +58,7 @@ the user puts in an amount that is greater than the quantity of said item, it wi
 the user that it is out of that item, and calls the start function.
 
 **Results if there isn't enough quantity**
+
 ![notEnoughQuan](https://github.com/vilagen/bamazon/blob/master/pictures/noEnoughQuan.PNG?raw=true)
 
 As long as the user inputs an item ID on the product table, and requests an amount equal
@@ -63,12 +68,14 @@ returns the start function. Yes will finish the purchase, and update the SQL dat
 reflect the new total quantity available, and call the start function again.
 
 **Process of "purchasing" a product**
+
 ![purchasing](https://github.com/vilagen/bamazon/blob/master/pictures/purchasing.PNG?raw=true)
 
 When choosing to look at the list of products, the photo below shows that the quantity 
 of item ID 11, "Guitar", changed from 9 to 6 after three of them were "purchased."
 
 **Results showing quantity being updated after puchase**
+
 ![quanUpdate](https://github.com/vilagen/bamazon/blob/master/pictures/quanUpdate.PNG?raw=true)
 
 
