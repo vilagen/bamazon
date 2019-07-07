@@ -48,7 +48,7 @@ function showProducts() {
     })
 }
 
-// create prompt for id and how mnay customer wishes to buy
+// create prompt for customer to select product
 
 function searchProducts(){
     inquirer
@@ -66,7 +66,35 @@ function searchProducts(){
         "\n Department: " + res[0].product +
         "\n Price: " + res[0].price + 
         "\n Quantity"  + res[0].stock_quantity)
+        chosenItem = res[0]
+        if(chosenItem.stock_quantity > 0) {
+            buyProduct(chosenItem)
+        }
+        else(
+            console.log("We are temporarily out of stock of that item.")
+        )
         })
-        showProducts()
    })
 }
+
+// create prompt so customer can buy product
+
+function buyProduct(item){
+    console.log(item)
+    inquirer
+    .prompt({
+        name: "amount",
+        type: "input",
+        message: "How many items do you wish to purchase?"
+    })
+    .then(function(answer) {
+        if(chosenItem.stock_quantity >= answer.amount) {
+            connection.query("UPDATE products ")
+        }
+        
+        connection.query("UPDATE products SET")
+    })
+
+}
+// need to prompt for amount they wish to buy
+// make sure it updates the db to lower the amount of quantity on the db.
