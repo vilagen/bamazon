@@ -15,7 +15,7 @@ The other objective was to also log those changes on a SQL database. When a pers
 product, the database will update that table to lower the amount of that specific item on the
 table it is in.
 
-##What this program does:
+## What this program does:
 
 When a user initiates the node program, there will be prompt asking if they wish to purchase
 items, or leave. If the user exits, it will end the connection to the database, and also 
@@ -79,7 +79,7 @@ of item ID 11, "Guitar", changed from 9 to 6 after three of them were "purchased
 ![quanUpdate](https://github.com/vilagen/bamazon/blob/master/pictures/quanUpdate.PNG?raw=true)
 
 
-###Plans for future updates:
+### Plans for future updates:
 
 The next planned goal for this program includes creating a new Node application called bamazonManager.js. 
 Running this application will:
