@@ -38,13 +38,13 @@ var connection = mysql.createConnection({
 connection.connect(function(err) {
     if (err) throw err;
     showProducts()
-    searchProducts()
 })
 
 function showProducts() {
     connection.query("SELECT * FROM products", function(err, results) {
         if (err) throw console.log("Error: " + err);
         console.log(results)
+        searchProducts()
     })
 }
 
@@ -58,14 +58,14 @@ function searchProducts(){
         message: "Please select an Item ID you would like to buy."
     })
     .then(function(answer) {
-        var query = "SELECT product, department_name, price, stock_quantity FROM products WHERE ?";
+        var query = "SELECT item_id, product, department_name, price, stock_quantity FROM products WHERE ?";
         console.log(query)
         connection.query(query, { item_id: answer.product }, function(err, res){
           if (err) throw err //console.log("Error was made selecting product: " + err)
         console.log("\n Product Selected: " + res[0].product +
         "\n Department: " + res[0].product +
         "\n Price: " + res[0].price + 
-        "\n Quantity"  + res[0].stock_quantity)
+        "\n Quantity: "  + res[0].stock_quantity)
         chosenItem = res[0]
         if(chosenItem.stock_quantity > 0) {
             buyProduct(chosenItem)
@@ -80,7 +80,6 @@ function searchProducts(){
 // create prompt so customer can buy product
 
 function buyProduct(item){
-    console.log(item)
     inquirer
     .prompt({
         name: "amount",
@@ -88,11 +87,25 @@ function buyProduct(item){
         message: "How many items do you wish to purchase?"
     })
     .then(function(answer) {
-        if(chosenItem.stock_quantity >= answer.amount) {
-            connection.query("UPDATE products ")
+        totalcost = (item.price * answer.amount)
+        buyingamount = answer.amount
+        (console.log(`Your amount total will be ${amount}.`))
+        if(item.stock_quantity >= answer.amount) {
+            console.log("test passed")
+            console.log(item.stock_quantity)
+            console.log(item.item_id)
+            query = "UPDATE products SET stock_quantity = stock_quantity - ? WHERE item_id = ?";
+            connection.query(query, [answer.amount, item.item_id], function(err, res) {
+                if (err) throw console.log ("Error occured when applying update to database. " + err)
+                console.log("Thank you for your purchase!")
+                showProducts()
+            })
+            
         }
-        
-        connection.query("UPDATE products SET")
+        else{
+            (console.log("Not enough in inventory."))
+            searchProducts()
+        }
     })
 
 }
