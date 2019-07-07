@@ -36,21 +36,39 @@ var connection = mysql.createConnection({
 })
 
 connection.connect(function(err) {
-    if (err) throw err;
-    showProducts()
+    if (err) throw "There was a problem connecting to Bamazon. Sorry for any inconvenience!" + err;
+    start()
 })
 
+// make a function asking if customer wants to buy products
+function start() {
+    inquirer.prompt({
+        name: "buyOrExit",
+        type: "list",
+        message: "Welcome to Bamazon! How may we help you today?",
+        choices: ["Purchase an item", "Exit"]
+    }).then(function(answer){
+        if (answer.buyOrExit === "Purchase an item") {
+            showProducts()
+        } else {
+            connection.end()
+        }
+    });
+}
+
+// function to show products to customers
 function showProducts() {
     connection.query("SELECT * FROM products", function(err, results) {
         if (err) throw console.log("Error: " + err);
+        productsArr = []
         console.log(results)
-        searchProducts()
+        chooseProducts()
     })
 }
 
 // create prompt for customer to select product
 
-function searchProducts(){
+function chooseProducts(){
     inquirer
     .prompt({
         name: "product",
@@ -59,25 +77,29 @@ function searchProducts(){
     })
     .then(function(answer) {
         var query = "SELECT item_id, product, department_name, price, stock_quantity FROM products WHERE ?";
-        console.log(query)
         connection.query(query, { item_id: answer.product }, function(err, res){
-          if (err) throw err //console.log("Error was made selecting product: " + err)
-        console.log("\n Product Selected: " + res[0].product +
-        "\n Department: " + res[0].product +
-        "\n Price: " + res[0].price + 
-        "\n Quantity: "  + res[0].stock_quantity)
-        chosenItem = res[0]
-        if(chosenItem.stock_quantity > 0) {
-            buyProduct(chosenItem)
-        }
-        else(
-            console.log("We are temporarily out of stock of that item.")
-        )
+            if (err) throw "Error was made selecting product: " + err
+            
+            // show details of product
+            console.log("\n Product Selected: " + res[0].product +
+            "\n Department: " + res[0].product +
+            "\n Price: " + res[0].price + 
+            "\n Quantity: "  + res[0].stock_quantity)
+
+            // store item that customer bought and put it in callback
+            chosenItem = res[0]    
+            if(chosenItem.stock_quantity > 0) {
+                buyProduct(chosenItem)
+
+            } else {
+                console.log("We are temporarily out of stock of that item.")
+                start()
+            }
         })
-   })
+    })
 }
 
-// create prompt so customer can buy product
+// function so customer can choose and buy product
 
 function buyProduct(item){
     inquirer
@@ -87,27 +109,40 @@ function buyProduct(item){
         message: "How many items do you wish to purchase?"
     })
     .then(function(answer) {
-        totalcost = (item.price * answer.amount)
-        buyingamount = answer.amount
-        (console.log(`Your amount total will be ${amount}.`))
+
+        // need to store total cost of purchase and amount customer is purchasing.
+        totalCost = (item.price * answer.amount)
+        quantityAmount = answer.amount
+
+        // if enough is in inventory, will prompt if customer wants to continue purchase
         if(item.stock_quantity >= answer.amount) {
-            console.log("test passed")
-            console.log(item.stock_quantity)
-            console.log(item.item_id)
-            query = "UPDATE products SET stock_quantity = stock_quantity - ? WHERE item_id = ?";
-            connection.query(query, [answer.amount, item.item_id], function(err, res) {
-                if (err) throw console.log ("Error occured when applying update to database. " + err)
-                console.log("Thank you for your purchase!")
-                showProducts()
-            })
-            
-        }
+        inquirer.prompt({
+            name: "verify_purchase",
+            type: "list",
+            message: `The total amount is $${totalCost}. Do you wish to continue?`,
+            choices: ["YES", "NO"]
+            }).then(function(reply){
+
+                // if customer chooses to buy product:
+                if( reply.verify_purchase === "YES"){
+                    query = "UPDATE products SET stock_quantity = stock_quantity - ? WHERE item_id = ?";
+                    connection.query(query, [quantityAmount, item.item_id], function(err, res) {
+                    if (err) throw console.log ("Error occured when applying update to database. " + err)
+                    console.log("Thank you for your purchase!")
+                    start()
+                    })
+
+                } else {
+                    console.log("Let's search for another item.")
+                    start()
+                    }            
+                })
+            }
+
         else{
             (console.log("Not enough in inventory."))
-            searchProducts()
+            start()
         }
     })
 
 }
-// need to prompt for amount they wish to buy
-// make sure it updates the db to lower the amount of quantity on the db.
