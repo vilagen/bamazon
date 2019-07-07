@@ -61,53 +61,102 @@ function showProducts() {
     connection.query("SELECT * FROM products", function(err, res) {
         if (err) throw console.log("Error: " + err);
         itemListArray = []
+        
+        // making a for loop to read choices easier
         for(var i = 0; i < res.length; i++){
-            console.log("------------------" +
-                "\n" +
-                "\n Item ID: " + res[i].item_id +
-                "\n Product Selected: " + res[i].product +
-                "\n Department: " + res[i].product +
-                "\n Price: " + res[i].price + 
-                "\n Quantity: "  + res[i].stock_quantity +
+        console.log("------------------" +
+            "\n" +
+            "\n Item ID: " + res[i].item_id +
+            "\n Product Selected: " + res[i].product +
+            "\n Department: " + res[i].product +
+            "\n Price: " + res[i].price + 
+            "\n Quantity: "  + res[i].stock_quantity +
+            "\n")
+            itemListArray.push(res[i].item_id)
+        }
+        console.log(itemListArray)
+
+        // chooseProducts(itemListArray)
+        inquirer.prompt({
+            name: "product",
+            type: "input",
+            message: "Please select an Item ID you would like to buy."
+    }).then(function(answer) {
+
+        // first check to see if what customer choose is an item ID
+        
+        if (itemListArray.includes(answer.product) === false) { 
+            console.log("We do not recognize that item. Please choose a different item.")
+            showProducts()
+            }
+        
+        var query = "SELECT item_id, product, department_name, price, stock_quantity FROM products WHERE ?";
+        connection.query(query, { item_id: answer.product }, function(err, res){
+
+            chosenItem = res[0]
+            console.log(chosenItem)
+            console.log(chosenItem.stock_quantity)
+             // checking for errors first
+             if (err) throw "Error was made selecting product: " + err
+
+            else if (chosenItem.stock_quantity === 0) {
+                console.log("We are temporarily out of stock of that item.")
+                start()
+
+            } else {
+
+                // show details of product
+                console.log("\n Product Selected: " + res[0].product +
+                "\n Department: " + res[0].product +
+                "\n Price: " + res[0].price + 
+                "\n Quantity: "  + res[0].stock_quantity +
                 "\n")
-                itemListArray.push(res[i].item_id)
-                }
-        chooseProducts()
+    
+                // store item that customer bought and put it in callback
+                buyProduct(chosenItem)
+                }   
+            })
+        })
     })
 }
 
 // create prompt for customer to select product
 
-function chooseProducts(){
-    inquirer
-    .prompt({
-        name: "product",
-        type: "input",
-        message: "Please select an Item ID you would like to buy."
-    })
-    .then(function(answer) {
-        var query = "SELECT item_id, product, department_name, price, stock_quantity FROM products WHERE ?";
-        connection.query(query, { item_id: answer.product }, function(err, res){
-            if (err) throw "Error was made selecting product: " + err
-            
-            // show details of product
-            console.log("\n Product Selected: " + res[0].product +
-            "\n Department: " + res[0].product +
-            "\n Price: " + res[0].price + 
-            "\n Quantity: "  + res[0].stock_quantity)
+// function chooseProducts(list){
+    
+   
+      
+//             console.log(chosenItem)
+//             console.log(list)
+//             console.log(answer.product)
 
-            // store item that customer bought and put it in callback
-            chosenItem = res[0]    
-            if(chosenItem.stock_quantity > 0) {
-                buyProduct(chosenItem)
+//             // checking for errors first
+//             if (err) throw "Error was made selecting product: " + err
 
-            } else {
-                console.log("We are temporarily out of stock of that item.")
-                start()
-            }
-        })
-    })
-}
+//             else if (chosenItem.stock_quantity === 0) {
+//             console.log("We are temporarily out of stock of that item.")
+//             start()
+
+//             } else if (!list.includes(answer.product)) { 
+//                 console.log("We do not recognize that item. Please choose a different item.")
+//                 start()
+
+//             } else {
+
+//             // show details of product
+//             console.log("\n Product Selected: " + res[0].product +
+//             "\n Department: " + res[0].product +
+//             "\n Price: " + res[0].price + 
+//             "\n Quantity: "  + res[0].stock_quantity +
+//             "\n")
+
+//             // store item that customer bought and put it in callback
+//             buyProduct(chosenItem)
+//             }   
+//         })
+//     })
+// }
+
 
 // function so customer can choose and buy product
 
@@ -150,8 +199,9 @@ function buyProduct(item){
             }
 
         else{
-            (console.log("Not enough in inventory."))
+            (console.log("\n We're sorry, but at this time do not enough in inventory to fulfill that order." + "\n"))
             start()
         }
     })
+
 }
