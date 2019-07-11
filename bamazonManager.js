@@ -25,6 +25,19 @@ function start() {
 inquirer.prompt({
     name: "EnterorExit",
     type: "list",
-    choices: 
+    choices: ["View Products for Sale", "View Low Inventory", "Add to Inventory", "Add New Product", "Exit"]
+}).then(function(answer){
+    
+        switch (answer.EnterorExit) {
+            
+            case "View Products for Sale":
+                viewProducts();
+
+            case "View Low Inventory":
+                viewLowInv();
+
+            case "Add to Inventory":
+                addtoInv()
+    }
 })
 }
