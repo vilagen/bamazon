@@ -40,7 +40,7 @@ function showProducts() {
                 "\n" +
                 "\n Item ID: " + res[i].item_id +
                 "\n Product Selected: " + res[i].product +
-                "\n Department: " + res[i].product +
+                "\n Department: " + res[i].department_name +
                 "\n Price: " + res[i].price + 
                 "\n Quantity: "  + res[i].stock_quantity +
                 "\n")
@@ -135,9 +135,9 @@ function buyProduct(item){
                 if( reply.verify_purchase === "YES"){
                     query = "UPDATE products SET stock_quantity = stock_quantity - ? WHERE item_id = ?";
                     connection.query(query, [quantityAmount, item.item_id], function(err, res) {
-                    if (err) throw console.log ("Error occured when applying update to database. " + err)
-                    console.log("\n Thank you for your purchase! \n")
-                    start()
+                        if (err) throw "Error occured when applying update to database. " + err
+                        console.log("\n Thank you for your purchase! \n")
+                        start()
                     })
 
                 } else {
@@ -147,7 +147,7 @@ function buyProduct(item){
             }
 
         else{
-            (console.log("\n We're sorry, but at this time we do not have enough of that item to fulfill your request." + "\n"))
+            (console.log("\n We're sorry, but at this time either we do not have enough of that item to fulfill your request, or a number was not inputted." + "\n"))
             start()
         }
     })
