@@ -223,12 +223,9 @@ function addNewItemProd(){
         ])
         .then(function(answer){
             console.log(answer.productName, answer.department, answer.price, answer.quantity)
-            newProdQuery = "INSERT INTO products (product, department_name, price, stock_quantity) VALUES ?"
-            values = [answer.productName, answer.department, answer.price, answer.quantity]
-            connection.query(newProdQuery, [values], function(err, res){
-                                if(err) throw "Error adding item to product table: " + err;
-                                console.log("New item added successfully.")
-            })
+            newProdQuery = "INSERT INTO products (product, department_name, price, stock_quantity) VALUES (?, ?, ?, ?)"
+            values = [answer.productName, answer.department, parseFloat(answer.price), parseInt(answer.quantity)]
+            connection.query(newProdQuery, values)
             start()
         })
 }
