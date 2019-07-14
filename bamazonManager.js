@@ -1,5 +1,6 @@
 var inquirer = require("inquirer")
 var mysql = require("mysql")
+var Table = require("cli-table")
 
 var connection = mysql.createConnection({
     host: "localhost",
@@ -53,21 +54,26 @@ inquirer.prompt({
     })
 }
 
+
+
+
+
 // view products on the database.
 function viewProducts(){
     query = "SELECT item_id, product, department_name, stock_quantity FROM products"
     connection.query(query, function(err, res){
-        if(err) throw "Error: " + err;
+        if (err) throw console.log("Error: " + err);
+        table = new Table({
+            head: ["Item ID", "Product", "Department Name", "Quantity"]
+         })
         for(var i = 0; i < res.length; i++){
-            console.log("------------------" +
-                "\n" +
-                "\n Item ID: " + res[i].item_id +
-                "\n Product Selected: " + res[i].product +
-                "\n Department: " + res[i].department_name +
-                "\n Price: " + res[i].price + 
-                "\n Quantity: "  + res[i].stock_quantity +
-                "\n")
-        }
+            itemID = res[i].item_id
+            product = res[i].product
+            department = res[i].department_name
+            quantity = res[i].stock_quantity
+                table.push([itemID, product, department, quantity])
+            }
+        console.log("\n" + table.toString() + "\n")
         start()
     })
 }
@@ -96,16 +102,19 @@ function chooseItem(){
     query = "SELECT item_id, product, stock_quantity FROM products"
     connection.query(query, function(err, res) {
         itemArrayList = []
-        if(err) throw "Error checking products: " + err;
+        if (err) throw console.log("Error: " + err);
+        table = new Table({
+            head: ["Item ID", "Product", "Quantity"]
+        })
         for(var i = 0; i < res.length; i++){
-            console.log("------------------" +
-            "\n" +
-            "\n Item ID: " + res[i].item_id +
-            "\n Product Selected: " + res[i].product +
-            "\n Quantity: "  + res[i].stock_quantity +
-            "\n")
-            itemArrayList.push(res[i].item_id)
-        }
+            itemID = res[i].item_id
+            product = res[i].product
+            quantity = res[i].stock_quantity
+                table.push([itemID, product, quantity])
+                itemArrayList.push(itemID)
+            }
+                console.log("\n" + table.toString() + "\n")
+
             //ask product to choose to add quantity to
             inquirer.prompt({
             name: "chooseToAdd",

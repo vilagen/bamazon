@@ -1,5 +1,6 @@
 var mysql = require("mysql")
 var inquirer = require("inquirer")
+var Table = require("cli-table")
 
 var connection = mysql.createConnection({
     host: "localhost",
@@ -31,21 +32,24 @@ function start() {
 }
 
 // function to show products to customers
+// UPDATE (7/14/2019): Included package to show a table.
 function showProducts() {
     connection.query("SELECT * FROM products", function(err, res) {
         if (err) throw console.log("Error: " + err);
         itemListArray = []
+        table = new Table({
+            head: ["Item ID", "Product", "Department Name", "Price", "Quantity"]
+         })
         for(var i = 0; i < res.length; i++){
-            console.log("------------------" +
-                "\n" +
-                "\n Item ID: " + res[i].item_id +
-                "\n Product Selected: " + res[i].product +
-                "\n Department: " + res[i].department_name +
-                "\n Price: " + res[i].price + 
-                "\n Quantity: "  + res[i].stock_quantity +
-                "\n")
-                itemListArray.push(res[i].item_id)
+            itemID = res[i].item_id
+            product = res[i].product
+            department = res[i].department_name
+            price = res[i].price 
+            quantity = res[i].stock_quantity
+                table.push([itemID, product, department, price, quantity])
+                itemListArray.push(itemID)
                 }
+        console.log("\n" + table.toString() + "\n")
         chooseProducts(itemListArray)
     })
 }
@@ -88,7 +92,7 @@ function chooseProducts(item){
                 
                 // show details of product
                 console.log("\n Product Selected: " + res[0].product +
-                "\n Department: " + res[0].product +
+                "\n Department: " + res[0].department +
                 "\n Price: " + res[0].price + 
                 "\n Quantity: "  + res[0].stock_quantity +
                 "\n")
@@ -119,7 +123,8 @@ function buyProduct(item){
     .then(function(answer) {
 
         // need to store total cost of purchase and amount customer is purchasing.
-        totalCost = (item.price * answer.amount)
+        initialCost = (item.price * answer.amount)
+        totalCost = initialCost.toFixed(2)
         quantityAmount = answer.amount
 
         // if enough is in inventory, will prompt if customer wants to continue purchase
@@ -131,12 +136,12 @@ function buyProduct(item){
             choices: ["YES", "NO"]
             }).then(function(reply){
 
-                // if customer chooses to buy product:
+                // if customer chooses to buy product
+                // UPDATE (7/14/2019): updated query to inlcude the new column for product_sales to update sales.
                 if( reply.verify_purchase === "YES"){
                     query = "UPDATE products SET stock_quantity = stock_quantity - ?, product_sales = product_sales + (price * ?) WHERE item_id = ?";
                     connection.query(query, [quantityAmount, quantityAmount, item.item_id], function(err, res) {
                         if (err) throw "Error occured when applying update to database. " + err
-                        console.log(res)
                         console.log("\n Thank you for your purchase! \n")
                         start()
                     })
