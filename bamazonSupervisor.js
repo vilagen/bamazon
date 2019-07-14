@@ -66,6 +66,8 @@ function start() {
     })
 }
 
+// function to view departments and their costs and profits. 
+// used cli table and join query to gather results between two tables
 function viewProductSales(){
     query = `SELECT D.department_id, D.department_name, D.over_head_costs, SUM(P.product_sales) AS product_sales, 
             (SUM(product_sales) - over_head_costs) AS total_profit 
@@ -86,7 +88,33 @@ function viewProductSales(){
                    table.push ([department, depName, overHeadCost, prodSales, totalProfit])
             }
             console.log("\n" + table.toString() + "\n")
+            start() 
         })
-        start() 
     }
 
+function createNewDep(){
+    inquirer.prompt([
+        
+        // get the name of the departmnet
+        {
+            name: "departmentName",
+            type: "input",
+            message: "What is the name of the Department?",
+        },
+
+        // get overhead cost of department
+        {
+            name: "cost",
+            type: "input",
+            message: "What is the overhead costs?",
+
+        },
+        ])
+        .then(function(answer){
+            console.log(answer.departmentName, answer.cost)
+            newDepartmentQuery = "INSERT INTO departments (department_name, over_head_costs) VALUES (?, ?)"
+            values = [answer.departmentName, parseFloat(answer.cost)]
+            connection.query(newDepartmentQuery, values)
+            start()
+    })
+}
