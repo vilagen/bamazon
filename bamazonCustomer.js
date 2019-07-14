@@ -133,9 +133,10 @@ function buyProduct(item){
 
                 // if customer chooses to buy product:
                 if( reply.verify_purchase === "YES"){
-                    query = "UPDATE products SET stock_quantity = stock_quantity - ? WHERE item_id = ?";
-                    connection.query(query, [quantityAmount, item.item_id], function(err, res) {
+                    query = "UPDATE products SET stock_quantity = stock_quantity - ?, product_sales = product_sales + (price * ?) WHERE item_id = ?";
+                    connection.query(query, [quantityAmount, quantityAmount, item.item_id], function(err, res) {
                         if (err) throw "Error occured when applying update to database. " + err
+                        console.log(res)
                         console.log("\n Thank you for your purchase! \n")
                         start()
                     })
