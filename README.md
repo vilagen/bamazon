@@ -32,7 +32,7 @@ shows the item id, item name, departmnet, quantity, and price.
 
 **Products listed from the SQL table**
 
-![ProductList](https://github.com/vilagen/bamazon/blob/master/pictures/showProducts.PNG?raw=true)
+![ProductList](https://github.com/vilagen/bamazon/blob/master/pictures/customerTable.PNG?raw=true)
 
 The user is prompted to choose an item based on it's id. At this time, there are only 11
 items, so someone could choose 1-11. There an if statement in place incase the user puts
@@ -84,12 +84,56 @@ of item ID 11, "Guitar", changed from 9 to 6 after three of them were "purchased
 The next planned goal for this program includes creating a new Node application called bamazonManager.js. 
 Running this application will:
 
-1. List a set of menu options:
-2. View Products for Sale
-3. View Low Inventory
-4. Add to Inventory
-5. Add New Product
-6. If a manager selects View Products for Sale, the app should list every available item: the item IDs, names, prices, and quantities.
-7. If a manager selects View Low Inventory, then it should list all items with an inventory count lower than five.
-8. If a manager selects Add to Inventory, your app should display a prompt that will let the manager "add more" of any item currently in the store.
-9. If a manager selects Add New Product, it should allow the manager to add a completely new product to the store.
+
+# Bamazon Manager
+
+This program is meant for managers. It still needs error testing, but it is meant for the following actions:
+
+List a set of menu options:
+1. View Products for Sale
+2. View Low Inventory
+3. Add to Inventory
+4. Add New Product
+
+**Start Menu**
+
+![startMenu](https://github.com/vilagen/bamazon/blob/master/pictures/managerStart.PNG?raw=true)
+
+**If a manager selects View Products for Sale, the app should list every available item: the item IDs, names, prices, and quantities.**
+
+![productList](https://github.com/vilagen/bamazon/blob/master/pictures/productsManager.PNG?raw=true)
+
+**If a manager selects View Low Inventory, then it should list all items with an inventory count lower than five.**
+
+![lowInventory](https://github.com/vilagen/bamazon/blob/master/pictures/lowInvManager.PNG?raw=true)
+
+**If a manager selects Add to Inventory, your app should display a prompt that will let the manager "add more" of any item currently in the store.**
+
+Before adding, AMD quantity was at 8 (item ID 2).
+
+![beforeAdding](https://github.com/vilagen/bamazon/blob/master/pictures/managerBeforeAdding.PNG?raw=true)
+
+Afterwards, now at 12.
+
+![afterAdding](https://github.com/vilagen/bamazon/blob/master/pictures/managerAMDadded.PNG?raw=true)
+
+**If a manager selects Add New Product, it should allow the manager to add a completely new product to the store.**
+
+![addProduct](https://github.com/vilagen/bamazon/blob/master/pictures/managerAddProduct.PNG?raw=true)
+
+
+# Bamazon Supervisor
+
+This is meant for mainly two actions: To allow a Supervisor to look at department sales and profits, and create a new department.
+
+**Show current departments, overhead costs, and profits**
+
+![departmentTable](https://github.com/vilagen/bamazon/blob/master/pictures/supervisorViewSales.PNG?raw=true)
+
+**Create a new department**
+
+![createDepartment](https://github.com/vilagen/bamazon/blob/master/pictures/supervisorCreateDep.PNG?raw=true)
+
+Showing that it is updated on SQL table. (Accidently made the same department twice):
+
+![sqlResults](https://github.com/vilagen/bamazon/blob/master/pictures/supervisorSQL.PNG?raw=true)
