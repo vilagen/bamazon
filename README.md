@@ -137,3 +137,8 @@ This is meant for mainly two actions: To allow a Supervisor to look at departmen
 Showing that it is updated on SQL table. (Accidently made the same department twice):
 
 ![sqlResults](https://github.com/vilagen/bamazon/blob/master/pictures/supervisorSQL.PNG?raw=true)
+
+At this time, the two other apps, Manager and Supervisor, still needs error testing done. Also, in future
+updates, we would want to make sure that Managers cannot create new departments, or duplicate items 
+already created. For Supervisors, we would want to make sure that they cannot duplicate departments
+already created. At this time though, the apps do what is intended, but is prone to errors right now.
