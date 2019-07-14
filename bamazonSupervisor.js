@@ -45,7 +45,7 @@ function start() {
     inquirer.prompt({
         name: "select",
         type: "list",
-        message: "Welcome to Bamazon Supervisor View",
+        message: "\n Welcome to Bamazon Supervisor View \n",
         choices: ["View Product Sales by Department", "Create New Department", "Exit"]
     }).then(function(answer){
 
@@ -67,17 +67,23 @@ function start() {
 }
 
 function viewProductSales(){
-    query = "SELECT * FROM departments"
+    query = `SELECT D.department_id, D.department_name, D.over_head_costs, SUM(P.product_sales) AS product_sales, 
+            (SUM(product_sales) - over_head_costs) AS total_profit 
+            FROM departments D JOIN products P ON D.department_name = P.department_name 
+            GROUP BY department_name 
+            ORDER BY department_id`
     connection.query(query, function(err, res){
         if(err) throw "Error: " + err;
             table = new Table({
-                head: ["Departmnet ID", "Department Name", "Over Head Costs"]
+                head: ["Departmnet ID", "Department Name", "Over Head Costs", "Product Sales", "Total Profit"]
             })
             for(var i = 0; i < res.length; i++){
                 department = res[i].department_id
                 depName = res[i].department_name
                 overHeadCost = res[i].over_head_costs
-                   table.push ([department, depName, overHeadCost])
+                prodSales = res[i].product_sales
+                totalProfit = res[i].total_profit
+                   table.push ([department, depName, overHeadCost, prodSales, totalProfit])
             }
             console.log("\n" + table.toString() + "\n")
         })
